@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>LDAP密码修改 - 测试环境</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="lib/layui/css/layui.css" media="all">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden
+        }
+
+        body {
+            background: #1E9FFF;
+        }
+
+        body:after {
+            content: '';
+            background-repeat: no-repeat;
+            background-size: cover;
+            -webkit-filter: blur(3px);
+            -moz-filter: blur(3px);
+            -o-filter: blur(3px);
+            -ms-filter: blur(3px);
+            filter: blur(3px);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+        }
+
+        .layui-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden
+        }
+
+        .admin-login-background {
+            width: 360px;
+            height: 400px;
+            position: absolute;
+            left: 50%;
+            top: 40%;
+            margin-left: -180px;
+            margin-top: -100px;
+        }
+
+        .logo-title {
+            text-align: center;
+            letter-spacing: 2px;
+            padding: 14px 0;
+        }
+
+        .logo-title h1 {
+            color: #1E9FFF;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .login-form {
+            background-color: #fff;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            padding: 14px 20px;
+            box-shadow: 0 0 8px #eeeeee;
+        }
+
+        .login-form .layui-form-item {
+            position: relative;
+        }
+
+        .login-form .layui-form-item label {
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 38px;
+            line-height: 36px;
+            text-align: center;
+            color: #d2d2d2;
+        }
+
+        .login-form .layui-form-item input {
+            padding-left: 36px;
+        }
+
+        .captcha {
+            width: 60%;
+            display: inline-block;
+        }
+
+        .captcha-img {
+            width: 34%;
+            float: right;
+        }
+
+        .captcha-img img {
+            height: 34px;
+            border: 1px solid #e6e6e6;
+            height: 36px;
+            width: 100%;
+        }
+
+        .layui-tab {
+            margin: 0;
+        }
+
+        .layui-tab-title {
+            border: none;
+        }
+
+        .layui-tab-title li {
+            width: 40%;
+        }
+
+        .tips_link {
+            margin-left: 25%;
+        }
+
+        .tips_link a {
+            color: #1E9FFF;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layui-container">
+        <div class="admin-login-background">
+            <div class="layui-form login-form">
+                <div class="layui-form-item logo-title">
+                    <h1>LDAP改密工具</h1>
+                </div>
+                <form class="layui-form" action="" lay-filter="chargeForm">
+                    <div class="layui-form-item">
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-username"></i>
+                            </div>
+                            <input id="username" type="text" name="username" value="" lay-verify="required" placeholder="账   号"
+
+                                lay-reqtext="请填写账号" autocomplete="off" class="layui-input" lay-affix="clear" disabled>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-username"></i>
+                            </div>
+                            <input id="code" type="text" name="code" value="" lay-verify="required" autocomplete="off" class="layui-input layui-hide">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-password"></i>
+                            </div>
+                            <input type="password" name="newpwd" value="" lay-verify="required" placeholder="新密码"
+                                lay-reqtext="请填写新密码" autocomplete="off" class="layui-input" lay-affix="eye">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-wrap">
+                            <div class="layui-input-prefix">
+                                <i class="layui-icon layui-icon-password"></i>
+                            </div>
+                            <input type="password" name="confirmpwd" value="" lay-verify="required" placeholder="新密码x2"
+                                lay-reqtext="请再次填写新密码" autocomplete="off" class="layui-input" lay-affix="eye">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        新密码必须符合密码安全强度要求：<br>
+                        同时包含大小写字母、数字，>8
+                    </div>
+                    <div class="layui-form-item">
+                        <button class="layui-btn layui-btn-normal layui-btn-fluid" lay-submit
+                            lay-filter="renew">修改</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="lib/jquery/jquery-3.4.1.min.js" charset="utf-8"></script>
+    <script src="lib/layui/layui.js" charset="utf-8"></script>
+    <script src="lib/jq-module/jquery.particleground.min.js" charset="utf-8"></script>
+    <script>
+        layui.use(['form', 'element'], function () {
+            var form = layui.form,
+                layer = layui.layer,
+                element = layui.element;
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            const code = urlParams.get('code');
+
+            // 粒子线条背景
+            $(document).ready(function () {
+                $('.layui-container').particleground({
+                    dotColor: '#7ec7fd',
+                    lineColor: '#7ec7fd'
+                });
+            });
+
+            // 设置表单值
+            if(username) $('#username').val(username);
+            if(code) $('#code').val(code);
+            //修改密码
+            form.on('submit(renew)', function (data) {
+                var data = data.field;
+                var btn = $(this);
+                if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(data.newpwd)) {
+                    layer.msg('密码不够强大');
+                    return false;
+                }
+                if (data.confirmpwd !== data.newpwd) {
+                    layer.msg('两次密码不一致');
+                    return false;
+                }
+                btn.prop('disabled', true).addClass('layui-btn-disabled');
+                layer.msg('请稍等...');
+                $.ajax({
+                    url: './api/reset.php',
+                    type: 'post',
+                    dataType: 'json',
+                    data,
+                    success: function (res) {
+                        if(res.success==true){
+                            layer.alert(res?.message || '成功但没有返回信息！');
+                        }else{
+                            layer.msg(res?.message || '服务器错误！');
+                            btn.prop('disabled', false).removeClass('layui-btn-disabled');
+                        }
+                    },
+                    error: function (res) {
+                        layer.msg(res?.message || '服务器错误,请联系运维！');
+                        btn.prop('disabled', false).removeClass('layui-btn-disabled');
+                    },
+                });
+                return false;
+            });
+        });
+    </script>
+</body>
+
+</html>
